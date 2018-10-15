@@ -19,10 +19,21 @@
 **SELECT select_list `[ FROM table_source ][ WHERE search_condition ]`**
 
 * USE 구문
-  * USE 데이터베이스_이름;
-  * 현재 사용하는 데이터베이스를 지칭 또는 변경
+
+  ```mssql
+  USE 데이터베이스_이름;
+  ```
+
+  * **현재 사용하는 데이터베이스를 지칭** 또는 변경
+
 * SELECT와 FROM
-  * SELECT * FROM HumanResources.Employee ;
+
+  ```mssql
+  SELECT 
+  	*
+  FROM HumanResources.Employee ;
+  ```
+
   * `*` : 해당 테이블의 모든 열(필드)을 조회한다.
   * HumanResources : 스키마 이름
   * Employee : 테이블 이름
@@ -49,43 +60,110 @@
 
 * 기본적인 WHERE 절
 
-  * 조회할 때 특정한 조건을 줘서, 원하는 데이터만 보고 싶을 때 사용
-  * SELECT 필드이름 FROM 테이블이름 WHERE 조건식;
+  * **조회할 때 특정한 조건을 줘서**, 원하는 데이터만 보고 싶을 때 사용
+
+    ```mssql
+    SELECT 
+    	필드이름 
+    FROM 테이블이름 
+    WHERE 조건식;
+    ```
 * 관계 연산자 사용
 
   * AND, OR 사용 가능.
-* BETWEEN ... AND, IN(), LIKE
 
-  * SELECT name FROM userTbl WEHER height BETWEEN 180 AND 183;
+* **BETWEEN ... AND, IN(), LIKE**
+
+  * ```mssql
+    SELECT 
+    	name 
+    FROM userTbl 
+    WHERE height BETWEEN 180 AND 183;
+    ```
+
     * BETWEEN ... AND : 데이터가 연속적인 값일때 기준 사이의 값을  조회한다.
     * 관계연산자 사용 : height >= 180 AND height <= 183
-  * SELECT name FROM userTbl WHERE addr IN ('경남', '전남', '경북')
-    * 연속적인 데이터가 아닌 이산적인 값을 찾을 때
-  * SELECT name FROM userTbl WHERE name LIKE '김%'
+
+  * 
+
+  * ```mssql
+    SELECT 
+    	name 
+    FROM userTbl 
+    WHERE addr IN ('경남', '전남', '경북')
+    ```
+
+    연속적인 데이터가 아닌 이산적인 값을 찾을 때
+
+  * 
+
+  * ```mssql
+    SELECT
+    	name 
+    FROM userTbl
+    WHERE name LIKE '김%'
+    ```
+
     * 문자열의 내용 검색
     * % :  무엇이든 허용
     * _ : 한글자와 매칭  -> _종신 : 맨 앞글자 한글자이고, 그다음이 종신인 사람 
-* ANY / ALL / SOME, 하위쿼리
+
+* **ANY / ALL / SOME, 하위쿼리**
 
   * 하위쿼리(=서브쿼리)
     * 쿼리문 안에 또 쿼리문이 들어있는 것.
     * 김경호보다 키가 크거나 같은 사람
-      * SELECT name FROM userTBL WHERE height > (SELECT height FROM userTbl WHERE name = '김경호')
+
+      * ```mssql
+        SELECT 
+        	name 
+        FROM userTBL 
+        WHERE height > (SELECT height FROM userTbl WHERE name = '김경호')
+        ```
+
   * ANY = SOME (같은 의미)
-    * 둘 이상의 반환값을 받아 오류가 나는 경우 
-    * 하위쿼리의 여러 결과값 중 한 가지만 만족해도 된다.
-    * SELECT name FROM userTBL WHERE height >= (SELECT height FROM userTbl WHERE addr = '경남')  -> **반환값 2개 이상이면 관계연산자 사용 불가**
-      * ..WHERE height >= ANY (SELECT height FROM userTbl WHERE addr = '경남')
-        * 주소가 경남인 사람들의 키보다 크거나 같은 사람들이 조회된다. 예를 들어 경남 사람 2명이 170, 173이면 170보다 큰 사람, 173보다 큰사람들이 조회
+    * **둘 이상의 반환값을 받아 오류가 나는 경우 **
+
+    * 하위쿼리의 여러 결과값 중 **한 가지만 만족해도 된다.**
+
+    * **반환값 2개 이상이면 관계연산자 사용 불가**
+
+    * ```mssql
+      SELECT 
+      	name 
+      FROM userTBL 
+      WHERE height >= (SELECT height FROM userTbl WHERE addr = '경남') 
+      ```
+
+      ANY 사용
+
+      ```mssql
+      SELECT 
+      	name 
+      FROM userTBL 
+      WHERE height >= ANY (SELECT height FROM userTbl WHERE addr = '경남')
+      ```
+
+      * 주소가 경남인 사람들의 키보다 크거나 같은 사람들이 조회된다. 예를 들어 경남 사람 2명이 170, 173이면 170보다 큰 사람, 173보다 큰사람들이 조회
+
   * ALL
-    * ..WHERE height >= ALL (SELECT height FROM userTbl WHERE addr = '경남')
-      * 키가 170보다크고 173보다도 커야한다.
+    ```mssql
+    SELECT 
+    	name 
+    FROM userTBL 
+    WHERE height >= ALL (SELECT height FROM userTbl WHERE addr = '경남')
+    ```
+
+    * 키가 170보다크고 173보다도 커야한다.
+
     * 하위쿼리 결과 여러개를 모두 만족시켜야 한다.
-* ORDER BY
+
+* **ORDER BY**
 
   * 결과가 출력되는 순서를 조절한다.
   * 디폴트 : 오름차순 (ASC) <-> 내림차순(DESC)
-* DISTINCT, TOP(N), TABLESAMPLE 절
+
+* **DISTINCT, TOP(N), TABLESAMPLE 절**
 
   * DISTINCT
     * 중복제거
@@ -102,7 +180,9 @@
       * 샘플링 기준이 행의 개수가 아닌 페이지 기준이기 때문이다.
     * 결과의 개수는 정확한 값이 아닌 근사치로 샘플을 추출한다.
     * SELECT * FROM userTbl TABLESAMPLE(5 height)
-* OFFSET / FETCH NEXT
+
+* **OFFSET / FETCH NEXT**
+
   * OFFSET
     * 지정한 행의 수만큼 건너 뛴 후에 출력.
     * SELECT name FROM userTbl ORDER BY birthYear OFFSET 4 ROWS;
@@ -111,8 +191,11 @@
   * FETCH NEXT
     * 출력될 행의 수 지정
     * SELECT name FROM userTbl ORDER BY birthYear OFFSET 4 ROWS FETCH NEXT 3 ROWS ONLY;
+
       * 5번째 행부터 3개 가져오기
-* SELECT INTO
+
+* **SELECT INTO**
+
   * 테이블을 복사해서 사용할 때 주로 사용
   * SELECT 복사할 열 INTO 새로운테이블 FROM 기존테이블
   * 기본키나 외래키 등의 제약 조건은 복사되지 않는다.
@@ -123,11 +206,11 @@
 
 > GROUP BY, HAVING, 집계 함수
 
-* GROUP BY
+* **GROUP BY**
 
   * 그룹으로 묶어주는 역할
 
-* 집계 함수
+* **집계 함수**
 
   * | 함수명     | 설명                                                         |
     | ---------- | ------------------------------------------------------------ |
@@ -141,7 +224,7 @@
 
   * 집계 함수로 반환된 값은 해당 필드의 데이터 형식이므로 필요하다면 CAST(정수->실수)나 CONVERT함수로 형변환 해준다.
 
-* HAVING
+* **HAVING**
 
   * 집계함수는 WHERE 절에 사용할 수 없다. 이 대안으로 HAVING 을 사용.
   * = 집계함수에 대해서만 조건을 제한한다.
@@ -153,14 +236,19 @@
 
 > ROLLUP / GROUPING_ID / CUBE
 
-* ROLLUP 
+* **ROLLUP **
+
   * 총합 또는 중갑 합계를 구한다.
   * GROUP BY ROLLUP (name, num)
-* GROUPING_ID
+
+* **GROUPING_ID**
+
   * 조회 결과가 데이터인지 합계인지 알고 싶을 떄 사용
   * 함수 결과가 0이면 데이터, 1이면 합계를 위해 추가된 열이다.
   * SELECT name , amount, GROUPING_ID(name) FROM buyTbl GROUP BY ROLLUP(name)
-* CUBE
+
+* **CUBE**
+
   * 다차원 정보의 데이터를 요약하는 데 더 적당하다.
   * 물품명, 색상, 수량 필드가 있을 때 물품별, 색상별로 소합계를 보고 싶을 때 사용
   * GROUP BY CUBE(color, prodName)
@@ -171,12 +259,17 @@
 
 > WITH 절과 CTE
 
-* WITH
+* **WITH**
+
   * CTE를 표현하는 구문
-* CTE
+
+* **CTE**
+
   * 기본의 뷰, 파생 테이블, 임시 테이블 등으로 사용되던 것을 대신할 수 있으며, 더 간결한 식으로 보여지는 장점이 있다.
   * ANSI-SQL99 표준에서 나온 것.
-* 비재귀적 CTE
+
+* **비재귀적 CTE**
+
   * 단순한 형태로 복잡한 쿼리 문장을 단순화시키는 데 적합하게 사용
   * ```WITH CTE_테이블이름(열이름) AS( <쿼리문>) SELECT 열이름 FROM CTE_테이블이름```
   * 쿼리문 결과를 WITH절에서 정의한 테이블에 담아 사용할 수 있다.
@@ -186,7 +279,8 @@
     * 위와 같을 때 BBB에서는 AAA가 참조 가능하지만 AAA에서는 BBB를 참조할 수 없다
     * 즉 아직 정의되지 않은 cTE를 미리 참조할 수 없다.
 
-* 재귀적 CTE
+* **재귀적 CTE**
+
   * ```WITH CTE_테이블이름 AS (<쿼리문1 SELECT..> UNIUON ALL <쿼리문2 SELECT..>)```
   * 쿼리문1 : 앵커 멤버
   * 쿼리문2 : 재귀 멤버
