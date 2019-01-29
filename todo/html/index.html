@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <title>Todo</title>
+        <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
+        <link rel="stylesheet" href="todo.css">
+    </head>
+    <body>
+        <div class="todo_wrap">
+            <h1>Todo</h1>
+            <div class="input_wrap">
+                <input type="text" placeholder="할 일을 입력해주세요.">
+                <button type="button">추가</button>
+            </div>
+            <ul class="todo_list">
+                <li class="complete">
+                    <input type="checkbox" id="a" checked>
+                    <label for="a">차이홍</label>
+                    <button type="button">X</button>
+                </li>
+                <li>
+                    <input type="checkbox" id="b">
+                    <label for="b">스크럼</label>
+                    <button type="button">X</button>
+                </li>
+            </ul>
+            <div class="todo_count">
+                <span>
+                    완료 <strong>1</strong>건
+                </span>
+                <span>
+                    미완료 <strong>1</strong>건
+                </span>
+                <span>
+                    총 <strong>2</strong>건
+                </span>
+            </div>
+        </div>
+    </body>
+</html>
